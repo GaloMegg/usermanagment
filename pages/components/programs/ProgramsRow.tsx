@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Programs } from "../../types/programs";
 import { User } from "../../types/userInfo";
 import ProgramsItem from "./ProgramsItem";
@@ -26,8 +26,14 @@ let programList: Programs[] = [
 
 const ProgramsRows = ({ userInfo }: { userInfo: User }) => {
     const [programListState, setProgramListState] = useState(programList)
+    const [newProgram, setNewProgram] = useState({
+        name: "",
+        location: "",
+        beneficiaries: 0,
+        owner: userInfo.userId,
+        id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    })
     const { programs } = userInfo.permissions
-
     const removeOneProgram = (id: string) => {
         setProgramListState(programListState.filter(program => program.id != id))
     }
@@ -41,7 +47,11 @@ const ProgramsRows = ({ userInfo }: { userInfo: User }) => {
             return program
         }))
     }
-
+    const addProgram = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setProgramListState([...programListState, newProgram])
+        e.currentTarget.reset()
+    }
     if (programs.view == "none") {
         return <h6>You are not allowed to see programs</h6>
     }
@@ -57,6 +67,38 @@ const ProgramsRows = ({ userInfo }: { userInfo: User }) => {
                     ? b.owner == userInfo.userId ? <ProgramsItem key={b.id} userInfo={userInfo} {...b} updateProgramData={updateProgramData} removeOneProgram={removeOneProgram} /> : null
                     : <ProgramsItem key={b.id} {...b} userInfo={userInfo} updateProgramData={updateProgramData} removeOneProgram={removeOneProgram} />
             })}
+            {programs.create &&
+                <article className="form__article">
+                    <h1>Create a new Program</h1>
+                    <form action="" onSubmit={(e) => addProgram(e)}>
+                        <input type='text' name='name' placeholder='Name' onChange={(e) => {
+                            setNewProgram({
+                                ...newProgram,
+                                [e.target.name]: e.target.value
+                            })
+                        }} />
+                        <input type='text' name='location' placeholder='Location' onChange={(e) => {
+                            setNewProgram({
+                                ...newProgram,
+                                [e.target.name]: e.target.value
+                            })
+                        }} />
+                        <input type='number' name='beneficiaries' placeholder='Beneficiaries' onChange={(e) => {
+                            setNewProgram({
+                                ...newProgram,
+                                [e.target.name]: e.target.value
+                            })
+                        }} />
+                        <input type="text" name="owner" defaultValue={userInfo.userId} onChange={(e) => {
+                            setNewProgram({
+                                ...newProgram,
+                                [e.target.name]: e.target.value
+                            })
+                        }} />
+                        <button type='submit' className="form__buttons--btn">Add</button>
+                    </form>
+                </article >
+            }
             <style jsx>
                 {`
                 article {
@@ -69,7 +111,19 @@ const ProgramsRows = ({ userInfo }: { userInfo: User }) => {
                     width: 30%;
                     margin: 1%;
                 }
-
+                form{
+                    width: 30%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                }
+                .form__article{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
             `}
             </style>
         </>

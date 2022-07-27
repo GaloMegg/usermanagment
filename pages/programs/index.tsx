@@ -9,9 +9,9 @@ const index = () => {
         "permissions": {
             "programs": {
                 "view": "everything",
-                "create": false,
-                "edit": "owned-only",
-                "deleteData": "everything",
+                "create": true,
+                "edit": "none",
+                "deleteData": "none",
             },
             "beneficiary": {
                 "view": "everything",

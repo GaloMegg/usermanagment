@@ -44,7 +44,7 @@ const ProgramsItem = ({ userInfo, name, location, beneficiaries, owner, removeOn
                                 }
                             }} className="form__buttons--btn">
                             {disabled ? "Edit" : "Done"}
-                            
+
                         </button>}
 
                     {((programs.deleteData == "owned-only" && owner == userInfo.userId) || programs.deleteData == "everything") &&
@@ -55,9 +55,7 @@ const ProgramsItem = ({ userInfo, name, location, beneficiaries, owner, removeOn
                         </button>}
                 </div>
             </form>
-            {
 
-            }
             <style jsx>
                 {`
                 form {
